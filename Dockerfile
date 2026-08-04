@@ -1,8 +1,9 @@
 FROM node:22-slim
 WORKDIR /app
+RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY . .
-RUN npm install --no-audit --no-fund --include=dev || npm install --no-audit --no-fund --include=dev
-RUN npm run build
+RUN pnpm install --no-frozen-lockfile
+RUN pnpm build
 ENV NODE_ENV=production
 ENV PORT=3000
 EXPOSE 3000
