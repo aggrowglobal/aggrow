@@ -1,14 +1,10 @@
 FROM node:20-slim
 WORKDIR /app
 
-# Build phase needs devDependencies (vite, esbuild, typescript) even in production
-ENV NODE_ENV=development
-
-COPY package.json package-lock.json ./
-RUN npm ci --no-audit --include=dev
-
+# Single layer: copy everything, install ALL deps (incl. build tools), build.
+# One combined step so no stale cached layer can skip the install.
 COPY . .
-RUN npm run build
+RUN npm install --no-audit --include=dev && npm run build
 
 ENV NODE_ENV=production
 ENV PORT=3000
