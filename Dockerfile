@@ -2,6 +2,7 @@ FROM node:22-slim
 WORKDIR /app
 RUN corepack enable && corepack prepare pnpm@latest --activate
 COPY . .
+RUN pnpm config set dangerously-allow-all-builds true
 RUN pnpm install --no-frozen-lockfile
 RUN pnpm build
 ENV NODE_ENV=production
